@@ -22,7 +22,7 @@ use std::mem::transmute;
 /// let little_endian: [u8; 4] = [0x00, 0x00, 0x00, 0xFF];
 /// let b: u32 = unsafe { transmute(little_endian)};
 ///``` 
-/// 
+#[allow(dead_code)]
 fn inspect_endianess() {
     let big_endian: [u8; 4] = [0xFF, 0x00, 0x00, 0x00];
     let little_endian: [u8; 4] = [0x00, 0x00, 0x00, 0xFF];
@@ -46,6 +46,7 @@ fn inspect_endianess() {
 /// b6 = 01000000
 /// b7 = 10000000
 ///```
+#[allow(dead_code)]
 fn binary_powers() {
 
     let b0: u8 = 2_u8.pow(0);
