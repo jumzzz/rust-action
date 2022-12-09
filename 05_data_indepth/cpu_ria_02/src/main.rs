@@ -34,6 +34,7 @@ impl CPU {
             let opcode = self.read_opcode();
             self.position_in_memory += 2;
         
+            // Parses opcode to c,x,y,d
             let c = ((opcode & 0xF000) >> 12) as u8;
             let x = ((opcode & 0x0F00) >> 8) as u8;
             let y = ((opcode & 0x00F0) >> 4) as u8;
