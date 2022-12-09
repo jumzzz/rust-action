@@ -15,6 +15,7 @@ impl CPU {
     }
 
     fn add_xy(&mut self, x: u8, y: u8) {
+
         let arg1 = self.registers[x as usize];
         let arg2 = self.registers[y as usize];
 
@@ -29,6 +30,9 @@ impl CPU {
     }
 
     fn run(&mut self) {
+
+        println!("-----------------------------------------------------");
+
         loop {
             
             let opcode = self.read_opcode();
@@ -41,6 +45,8 @@ impl CPU {
             let d = ((opcode & 0x000F) >> 0) as u8;
 
             println!("opcode = 0x{:04X}, \tself.registers[0] = {}", opcode, self.registers[0]);
+            println!("c = 0x{:02X}, x = 0x{:02X}, y = 0x{:02X}, d = 0X{:02X}", c, x, y, d);
+            println!("-----------------------------------------------------");
             
             // Loop terminates when opcode=0x0000
             match (c, x, y, d) {
@@ -49,6 +55,7 @@ impl CPU {
                 _                   => todo!("opcode {:04x}", opcode),
             }
         }
+    
     }
 }
 
@@ -66,9 +73,9 @@ fn main() {
     cpu.registers[3] = 10;
 
     let mem = &mut cpu.memory;
-    mem[0] = 0x80; mem[1] = 0x14;
-    mem[2] = 0x80; mem[3] = 0x24;
-    mem[4] = 0x80; mem[5] = 0x34;
+    mem[0] = 0x80; mem[1] = 0x14;   // mem[1] <- first source register
+    mem[2] = 0x80; mem[3] = 0x24;   // mem[2] <- second source register
+    mem[4] = 0x80; mem[5] = 0x34;   // mem[3] <- third source register
 
     cpu.run();
 
