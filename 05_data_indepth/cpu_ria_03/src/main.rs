@@ -6,8 +6,6 @@ struct CPU {
     stack_pointer: usize,
 }
 
-
-
 #[allow(dead_code)]
 fn load_mem_v1() {
     let mut memory: [u8; 4096] = [0; 4096];
