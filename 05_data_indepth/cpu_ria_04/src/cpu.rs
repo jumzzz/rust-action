@@ -50,7 +50,6 @@ impl CPU {
 
             let nnn = opcode & 0x0FFF;
 
-            // println!("position_in_memory = 0x{:04X}", self.position_in_memory);
             println!("opcode = 0x{:04X}, reg[0] = {}, \t(x,y) = ({},{}), pos = 0x{:04X})", 
                     opcode, 
                     self.registers[0],
