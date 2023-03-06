@@ -6,6 +6,8 @@ mod dns;
 mod ethernet;
 mod http;
 
+/// This requires a more intensive review
+
 fn main() {
     let app = App::new("mget")
         .about("GET a webpage, manually")
