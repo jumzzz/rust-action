@@ -5,6 +5,7 @@ fn main() {
     let n2: u8 = 6;
     let n3: u8 = 5;
 
+    // The total parity bits:
     // Parity bits only means counting the bits
     println!("{} ({:08b}), {}", n0, n0, n0.count_ones());
     println!("{} ({:08b}), {}", n1, n1, n1.count_ones());
