@@ -38,7 +38,6 @@ impl MacAddress {
 
 fn main() {
     let mac = MacAddress::new();
-    
     println!("mac.is_local() = {}", mac.is_local());
     println!("mac.is_unicast() = {}", mac.is_unicast());
 

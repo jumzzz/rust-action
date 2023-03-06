@@ -26,9 +26,7 @@ impl fmt::Display for UpstreamError {
     }
 }
 
-impl error::Error for UpstreamError {
-
-}
+impl error::Error for UpstreamError { }
 
 /// Additional Tricks
 /// To remove map_err(), we can implement From<T> for UpstreamError
@@ -53,9 +51,7 @@ impl From<net::AddrParseError> for UpstreamError {
 /// In other words, this strategy retains the explicitness of Upstream Error
 /// types.
 fn main() -> Result<(), UpstreamError> {
-
     let _f = fs::File::open("invisible.txt")?;
-    
     let _localhost = "::1"
         .parse::<Ipv6Addr>()?;
 

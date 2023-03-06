@@ -30,6 +30,7 @@ impl error::Error for UpstreamError {
 
 }
 
+
 /// Advantage of this strategy
 /// 1. Trait objects is also known as type erasure. Rust is no longer aware
 /// that an error has originated upstream. Using Box<dyn Error> as the error
@@ -48,5 +49,4 @@ fn main() -> Result<(), UpstreamError> {
         .map_err(UpstreamError::Parsing)?;
 
     Ok(())
-
 }
