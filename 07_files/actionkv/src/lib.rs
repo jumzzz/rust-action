@@ -30,19 +30,18 @@ pub struct ActionKV {
 
 impl ActionKV {
     pub fn open(path: &Path) -> io::Result<Self> {
-        let f = OpenOptions::new()
+        Ok(ActionKV {
+            f: OpenOptions::new()
                 .read(true)
                 .write(true)
                 .create(true)
                 .append(true)
-                .open(path)?;
-
-        Ok(ActionKV {
-            f: f,
+                .open(path)?,
             index: HashMap::new(),
         })
     }
 
+    
     fn process_record<R: Read>(f: &mut R) -> io::Result<KeyValuePair> {
         
         // Is this incrementally being read?
@@ -59,7 +58,9 @@ impl ActionKV {
 
         let mut data = ByteString::with_capacity(data_len as usize);
         {
-            f.by_ref().take(data_len as u64).read_to_end(& mut data)?;
+            f.by_ref()
+            .take(data_len as u64)
+            .read_to_end(& mut data)?;
         }
         debug_assert_eq!(data.len(), data_len as usize);
 
@@ -86,7 +87,6 @@ impl ActionKV {
 
         loop {
             let current_position = f.seek(SeekFrom::Current(0))?;
-
             let maybe_kv = ActionKV::process_record(&mut f);
 
             let kv = match maybe_kv {
