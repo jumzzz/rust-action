@@ -61,7 +61,7 @@ fn main() {
 
     // Remember: expect extracts the contained value of Result. But it throws
     // an error if some undesired stuff happened.
-    
+    //
     // By the looks of it, this set additional configurations for our
     // UdpSocket bindings
     let localhost = UdpSocket::bind("0.0.0.0:0")
@@ -69,6 +69,8 @@ fn main() {
     let timeout = Duration::from_secs(3);
     localhost.set_read_timeout(Some(timeout)).unwrap();
     localhost.set_nonblocking(false).unwrap();
+
+
 
     let _amt = localhost
         .send_to(&request_as_bytes, dns_server)
