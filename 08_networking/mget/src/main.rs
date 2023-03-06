@@ -45,6 +45,12 @@ fn main() {
                 IPv4 Address");
 
     // Let's define the modules first
+    let addr = dns::resolve(dns_server_text, domain_name)
+            .unwrap()
+            .unwrap();
+    
+    let mac = ethernet::MacAddress::new().into();
+    http::get(tap, mac, addr, url).unwrap();
 
 
 
