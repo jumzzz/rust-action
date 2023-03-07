@@ -55,15 +55,19 @@ fn main() {
     let action = args.value_of("action").unwrap();
     let std = args.value_of("std").unwrap();
 
+    println!("Current Args\n");
+    println!("action = {}", action);
+    println!("std = {}\n", std);
+
     if action == "set" {
         unimplemented!()
     }
 
     let now = Clock::get();
     match std {
-        "timestamp" => println!("{}", now.timestamp()),
-        "rfc2822" => println!("{}", now.to_rfc2822()),
-        "rfc3339" => println!("{}", now.to_rfc3339()),
+        "timestamp" => println!("{}\n", now.timestamp()),
+        "rfc2822" => println!("{}\n", now.to_rfc2822()),
+        "rfc3339" => println!("{}\n", now.to_rfc3339()),
         _ => unreachable!(),
     }
 }
