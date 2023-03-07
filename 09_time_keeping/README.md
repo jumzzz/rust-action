@@ -9,3 +9,4 @@
 5. **Steady Clock:** Provides two guarantees: its seconds are all equal length and it is monotonically increasing.
 6. **High Accuracy:** A clock is highly accurate if the length of seconds are regular. The difference between two clocks is known as skew.
 7. **High Resolution:** Provides accuracy down to 10ns or below.
+8. **Fast Clock:** A clock that takes little time to read the time. Fast clocks sacrifice accuracy and precision for speed, however.
