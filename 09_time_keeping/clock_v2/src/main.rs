@@ -165,10 +165,41 @@ fn check_time() -> Result<f64, std::io::Error> {
         "time2.google.com",
     ];
 
-    
+    let mut times = Vec::with_capacity(servers.len());
+
+    for &server in servers.iter() {
+        print!("{} =>", server);
+
+        let calc = ntp_roundtrip(&server, NTP_PORT);
+
+        match calc {
+            Ok(time) => {
+                println!(" {}ms away from local system time", time.offset());
+                times.push(time);
+            }
+            Err(_) => {
+                println!(" ? [response took too long]")
+            }
+        };
+    }
+
+    let mut offsets = Vec::with_capacity(servers.len());
+    let mut offset_weights = Vec::with_capacity(servers.len());
+
+    for time in &times {
+        let offset = time.offset() as f64;
+        let delay = time.delay() as f64;
+
+        let weight = 1_000_000.0 / (delay * delay);
+        if weight.is_finite() {
+            offsets.push(offset);
+            offset_weights.push(weight);
+        }
+    }
+
+    let avg_offset = weighted_mean(&offsets, &offset_weights);
+    Ok(avg_offset)
 }
-
-
 
 struct Clock;
 
@@ -264,6 +295,15 @@ fn main() {
             Some(_) => eprintln!("Unable to set the time: {:?}", maybe_error),
             None => (),
         }
+    } else if action == "check-ntp" {
+        let offset = check_time().unwrap() as isize;
+
+        let adjust_ms_ = offset.signum() * offset.abs().min(200) / 5;
+        let adjust_ms_ = ChronoDuration::milliseconds(adjust_ms_ as i64);
+
+        let now: DateTime<Utc> = Utc::now() + adjust_ms_;
+
+        Clock::set(now);
     }
 
     let now = Clock::get();
