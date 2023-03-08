@@ -233,11 +233,15 @@ impl Clock {
 fn parse_args() -> ArgMatches<'static> {
     let app = App::new("clock")
         .version("0.1")
-        .about("Gets and (aspirationally) sets the time.")
+        .about("Gets and sets the time.")
+        .after_help(
+            "Note: UNIX timestamps are parsed as whole seconds since 1st \
+            January 1970 0:00:00 UTC. For more accuracy, use another \
+            format.")
         .arg(
             Arg::with_name("action")
                 .takes_value(true)
-                .possible_values(&["get", "set"])
+                .possible_values(&["get", "set", "check-ntp"])
                 .default_value("get"),
         )
         .arg(
