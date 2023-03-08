@@ -9,4 +9,24 @@
 
 5. peer-to-peer concensus of an agreed time
 - Search an algorithm for it
-- Implement it yourself
+- Implement it yourself (If possible)
+
+a. Always on mode
+
+```
+The always on mode allows multiple computers to work in a peer-to-peer
+fashion to converge on an agreed definition of now. It requires a software
+daemon or service to run constantly on each device, but it can achieve tight
+synchronization within local networks
+```
+
+b. The request/response mode
+```
+The request/response mode is much simpler. Local clients request the time
+via a single message and then parse the response, keeping track of the elapsed
+time. The client can then compare the original timestamp with timestamp sent
+from the server, alter any delays caused by network latency, and make 
+any necessary adjustments to move the clock towards the server's time.
+```
+
+
