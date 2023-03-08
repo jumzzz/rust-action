@@ -29,4 +29,13 @@ from the server, alter any delays caused by network latency, and make
 any necessary adjustments to move the clock towards the server's time.
 ```
 
+Also, know how `NTPResult` matches the client-server time with these parameters.
 
+```rust
+NTPResult {
+    t1: t1,
+    t2: t2,
+    t3: t3,
+    t4: t4,
+}
+```
