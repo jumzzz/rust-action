@@ -20,7 +20,7 @@ const NTP_TO_UNIX_SECONDS: i64 = 2_208_988_800;
 // live as long as the running program. But it can still be coerced
 // to a shorter lifetime - Rust by Practice
 // 12300 is the default port for NTP
-const LOCAL_ADDRESS: &'static str = "0.0.0.0:12300"; 
+const LOCAL_ADDR: &'static str = "0.0.0.0:12300"; 
 
 
 #[derive(Default, Debug, Copy, Clone)]
@@ -80,6 +80,7 @@ impl From<DateTime<Utc>> for NTPTimestamp {
     }
 }
 
+
 impl NTPMessage {
     fn new() -> Self {
         NTPMessage { 
@@ -113,11 +114,7 @@ impl NTPMessage {
     fn tx_time(&self) -> Result<NTPTimestamp, std::io::Error> {
         self.parse_timestamp(40)
     }
-
-
-
 }
-
 
 fn weighted_mean(values: &[f64], weights: &[f64]) -> f64 {
     let mut result = 0.0;
@@ -127,8 +124,50 @@ fn weighted_mean(values: &[f64], weights: &[f64]) -> f64 {
         result += v * w;
         sum_of_weights += w;
     }
-    result / sum_of_weights;
+    result / sum_of_weights
 }
+
+
+fn ntp_roundtrip(host: &str, port: u16) -> Result<NTPResult, std::io::Error> {
+    let destination = format!("{}:{}", host, port);
+    let timeout = Duration::from_secs(1);
+
+    let request = NTPMessage::client();
+    let mut response = NTPMessage::new();
+
+    let message = request.data;
+
+    let udp = UdpSocket::bind(LOCAL_ADDR)?;
+    udp.connect(&destination).expect("unable to connect");
+
+    let t1 = Utc::now();
+
+    udp.send(&message)?;
+    udp.set_read_timeout(Some(timeout))?;
+    udp.recv_from(&mut response.data)?;
+    let t4 = Utc::now();
+
+    let t2: DateTime<Utc> = response.rx_time().unwrap().into();
+    let t3: DateTime<Utc> = response.tx_time().unwrap().into();
+
+    Ok(NTPResult { t1: t1, t2: t2, t3: t3, t4: t4 })
+
+}
+
+fn check_time() -> Result<f64, std::io::Error> {
+    const NTP_PORT: u16 = 123;
+
+    let servers = [
+        "time.nist.gov",
+        "time.apple.com",
+        "time.euro.apple.com",
+        "time.google.com",
+        "time2.google.com",
+    ];
+
+    
+}
+
 
 
 struct Clock;
