@@ -1,10 +1,83 @@
 #[cfg(not(windows))]
 use libc;
 
-use chrono::{DateTime, Local, TimeZone};
+use chrono::{DateTime, Duration as ChronoDuration, TimeZone, Timelike};
+use chrono::{Local, Utc};
+
 use clap::{App, Arg, ArgMatches};
 
+// Standard Libraries
 use std::mem::zeroed;
+use std::net::UdpSocket;
+use std::time::Duration;
+
+// Useful conversion constants
+const NTP_MESSAGE_LENGTH: usize = 48;
+const NTP_TO_UNIX_SECONDS: i64 = 2_208_988_800;
+
+// Note: indicates the data pointed to by the reference
+// live as long as the running program. But it can still be coerced
+// to a shorter lifetime - Rust by Practice
+// 12300 is the default port for NTP
+const LOCAL_ADDRESS: &'static str = "0.0.0.0:12300"; 
+
+
+#[derive(Default, Debug, Copy, Clone)]
+struct NTPTimestamp {
+    seconds: u32,
+    fraction: u32,
+}
+
+struct NTPMessage {
+    data: [u8; NTP_MESSAGE_LENGTH],
+}
+
+#[derive(Debug)]
+struct NTPResult {
+    t1: DateTime<Utc>,
+    t2: DateTime<Utc>,
+    t3: DateTime<Utc>,
+    t4: DateTime<Utc>,
+}
+
+impl NTPResult {
+    fn offset(&self) -> i64 {
+        let duration = (self.t2 - self.t1) + (self.t4 - self.t3);
+        duration.num_milliseconds() / 2
+    }
+
+    fn delay(&self) -> i64 {
+        let duration = (self.t4 - self.t1) - (self.t3 - self.t2);
+        duration.num_milliseconds()
+    }
+}
+
+
+// Try compiling it as -> DateTime<Utc> instead of Self
+impl From<NTPTimestamp> for DateTime<Utc> {
+    fn from(ntp: NTPTimestamp) -> Self {
+        let secs = ntp.seconds as i64 - NTP_TO_UNIX_SECONDS;
+        let mut nanos = ntp.fraction as f64;
+        nanos *= 1e9;
+        nanos /= 2_f64.powi(32);
+        
+        Utc.timestamp(secs, nanos as u32)
+    }
+}
+
+impl From<DateTime<Utc>> for NTPTimestamp {
+    fn from(utc: DateTime<Utc>) -> Self {
+        let secs = utc.timestamp() + NTP_TO_UNIX_SECONDS;
+        let mut fraction = utc.nanosecond() as f64;
+        fraction *= 2_f64.powi(32);
+        fraction /= 1e9;
+
+        NTPTimestamp { 
+            seconds: secs as u32, 
+            fraction: fraction as u32 }
+    }
+}
+
 
 struct Clock;
 impl Clock {
@@ -68,6 +141,7 @@ fn parse_args() -> ArgMatches<'static> {
 
 
 fn main() {
+
     let args = parse_args();
 
     let action = args.value_of("action").unwrap();
