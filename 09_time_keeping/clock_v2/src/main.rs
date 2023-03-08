@@ -98,17 +98,36 @@ impl NTPMessage {
         msg
     }
 
-    fn parse_timestamp(
-        &self,
-        i: usize,
-
-    ) -> Result<NTPTimestamp, std::io::Error> {
+    fn parse_timestamp(&self, i: usize) -> Result<NTPTimestamp, std::io::Error> {
         let mut reader = &self.data[i..i + 8];
         let seconds = reader.read_u32::<BigEndian>()?;
         let fraction = reader.read_u32::<BigEndian>()?;
 
         Ok(NTPTimestamp { seconds: seconds, fraction: fraction })
     }
+
+    fn rx_time(&self) -> Result<NTPTimestamp, std::io::Error> {
+        self.parse_timestamp(32)
+    }
+
+    fn tx_time(&self) -> Result<NTPTimestamp, std::io::Error> {
+        self.parse_timestamp(40)
+    }
+
+
+
+}
+
+
+fn weighted_mean(values: &[f64], weights: &[f64]) -> f64 {
+    let mut result = 0.0;
+    let mut sum_of_weights = 0.0;
+
+    for (v, w) in values.iter().zip(weights) {
+        result += v * w;
+        sum_of_weights += w;
+    }
+    result / sum_of_weights;
 }
 
 
