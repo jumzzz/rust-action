@@ -18,3 +18,6 @@ let add = |a,b| { a + b };
 #### Answer #2
 - For each resource, there could be only one owner. It's a fundamental rule in Rust. To ensure that will happen, Rust have to move a resource from one thread to another.
 - This is the reason why you have to explicitly indicate the move variable, in order to allow the Rust compiler to move your target resource.
+
+#### Further Clarification for #2
+- Spawned subthreads can outlive their parents. That implies that ownership should pass to the subthread with `move`.
