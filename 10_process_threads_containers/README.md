@@ -21,3 +21,7 @@ let add = |a,b| { a + b };
 
 #### Further Clarification for #2
 - Spawned subthreads can outlive their parents. That implies that ownership should pass to the subthread with `move`.
+
+
+#### TODO
+- Reproduce the plot in page 333
