@@ -69,10 +69,8 @@ fn parse_args() -> Params {
 
 fn spawn_threads(params: Params) {
     println!("number_of_threads,sample_number,delay");
-
     // Generate thread count
     for thread_count in 1..params.num_threads + 1 {
-        
         // Generate n number of sample per thread count
         for n in 0..params.sample_per_step {
             let mut handles = Vec::with_capacity(thread_count as usize);
@@ -89,6 +87,7 @@ fn spawn_threads(params: Params) {
                 handles.push(handle);
             }
 
+            // Wait for all threads to get finished
             for handle in handles {
                 handle.join().unwrap();
             }
@@ -96,11 +95,9 @@ fn spawn_threads(params: Params) {
             let finish = time::Instant::now();
             let time_diff = finish.duration_since(start).as_micros() as f64;
             println!("{},{},{:02}", thread_count, n, time_diff / 1000.0);
-            
         }
     }
 }
-
 
 fn main() {
     let params = parse_args();
