@@ -99,6 +99,7 @@ fn spawn_threads(params: Params) {
     }
 }
 
+
 fn main() {
     let params = parse_args();
     spawn_threads(params); 

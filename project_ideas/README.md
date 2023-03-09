@@ -39,3 +39,5 @@ NTPResult {
     t4: t4,
 }
 ```
+
+Actually, the detail is on page 316-317 on Rust-in-Action book
