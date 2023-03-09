@@ -88,6 +88,8 @@ fn spawn_threads(params: Params) {
             }
 
             // Wait for all threads to get finished
+            // if handles have ampersand &handles
+            // a move will occur
             for handle in handles {
                 handle.join().unwrap();
             }
