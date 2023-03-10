@@ -31,6 +31,6 @@ pub struct Duration {
 }
 ```
 
-**The Rust Book is pretty clear on this:**
+**The Rust Book is pretty clear on this**
 
 > If a type implements the `Copy` trait, variables that use it do not move, but rather trivially copied, making them still valid after assignment to another variable.
