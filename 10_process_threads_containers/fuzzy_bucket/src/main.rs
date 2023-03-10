@@ -1,5 +1,6 @@
-/// Understanding ranges i0..i1
-fn main() {
+
+#[allow(dead_code)]
+fn fuzz_01() {
     println!("x..=y range syntax");
     let v = vec![1,2,3,4,5,6,7,8,9,10];
     for v0 in &v {
@@ -9,6 +10,10 @@ fn main() {
             _ =>  println!("anything = {}", v0),
         };
     }
+}
+
+#[allow(dead_code)]
+fn fuzz_02() {
     println!("bitwise_or |");
     for v0 in &v {
         match v0 {
@@ -17,4 +22,11 @@ fn main() {
             _ =>  println!("anything = {}", v0),
         };
     }
+}
+
+/// Understanding ranges i0..i1
+fn main() {
+//    fuzz_01();
+//    fuzz_02();
+
 }
