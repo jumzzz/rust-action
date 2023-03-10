@@ -20,7 +20,7 @@ let handle_01 = thread::spawn(move || {
 ```
 
 But the `Duration` struct implements `Clone` and `Copy`. Hence, the threads
-doesn't actually move it but rather copies the `pause`.
+doesn't actually move the variable `pause` but rather performs a copy.
 ```rust
 #[stable(feature = "duration", since = "1.3.0")]
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
