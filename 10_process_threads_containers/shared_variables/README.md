@@ -30,3 +30,7 @@ pub struct Duration {
     nanos: u32, // Always 0 <= nanos < NANOS_PER_SEC
 }
 ```
+
+**The Rust Book is pretty clear on this:**
+
+> If a type implements the `Copy` trait, variables that use it do not move, but rather trivially copied, making them still valid after assignment to another variable.
