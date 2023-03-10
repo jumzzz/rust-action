@@ -5,7 +5,7 @@ If the ownership of `pause` was moved from another thread, why does `pause` allo
 
 ## Answer
 
-We observed that `pause` are supposedly moved on two threads
+At a glance, `pause` ownership looks like it was being moved to separate threads
 ```rust
 let pause = time::Duration::from_millis(20);
 
