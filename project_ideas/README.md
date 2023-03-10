@@ -41,3 +41,8 @@ NTPResult {
 ```
 
 Actually, the detail is on page 316-317 on Rust-in-Action book
+
+6. Implement a Dynamically Growing List on Rust and which implements existing traits that related to  
+- Iterators
+- Mappings
+- Also, it should work well with Rayon
