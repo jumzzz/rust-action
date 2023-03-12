@@ -1,4 +1,14 @@
-# Kernels
+### This is now compiling by using the following
 
-**Note:**
-- Disable `rustup default nightly` after working on this book.
+This seems to work
+
+```
+rm -rf ~/.cargo/registry/index/*
+```
+
+And setting the configuration values as
+```
+[dependencies]
+bootloader = "0.9"
+x86_64 = "0.14"
+```
