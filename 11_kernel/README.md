@@ -13,7 +13,17 @@ rm -rf ~/.cargo/registry/index/*
 ### Dependency Settings
 On the other hand, setting the dependencies with the following version works
 
+### Setting the rustup nightly
 
+```
+rustup default nightly-2021-03-01
+```
+
+### Reverting the default rustup
+
+```
+rustup default stable
+```
 
 **dependencies config for Cargo.toml**
 ```
