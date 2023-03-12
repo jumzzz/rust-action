@@ -1,14 +1,14 @@
-#![no_std]                       // <1>
-#![no_main]                      // <1>
-#![feature(core_intrinsics)]     // <2>
+#![no_std]
+#![no_main]
+#![feature(core_intrinsics)]
 
-use core::intrinsics;            // <2>
-use core::panic::PanicInfo;      // <3>
+use core::intrinsics;
+use core::panic::PanicInfo;
 
 #[panic_handler]
 #[no_mangle]
 pub fn panic(_info: &PanicInfo) -> ! {
-  intrinsics::abort();           // <4>
+  intrinsics::abort();
 }
 
 #[no_mangle]
@@ -17,8 +17,8 @@ pub extern "C" fn _start() -> ! {
 
   unsafe {
     framebuffer
-      .offset(1)                 // <5>
-      .write_volatile(0x30);     // <6>
+      .offset(1) 
+      .write_volatile(0x30);
   }
 
   loop {}
