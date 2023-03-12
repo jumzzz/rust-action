@@ -3,8 +3,10 @@
 #![feature(core_intrinsics)]  // Unlocks LLVM Internals
 #![feature(lang_items)]
 
-use core::intrinsics;
+use core::fmt;
 use core::panic::PanicInfo;
+use core::fmt::Write;
+
 
 use x86_64::instructions::{hlt};
 
@@ -22,13 +24,70 @@ enum Color {
   Gray = 0x7,       DarkGray = 0x8
 }
 
+struct Cursor {
+  position: isize,
+  foreground: Color,
+  background: Color,
+}
+
+impl Cursor {
+  fn color(&self) -> u8 {
+    let fg = self.foreground as u8;
+    let bg = (self.background as u8) << 4;
+    fg | bg
+  }
+
+  fn print(&mut self, text: &[u8]) {
+    let color = self.color();
+
+    let framebuffer = 0xb8000 as *mut u8;
+
+    for &character in text {
+      // This shows that every single character occupy 2 bytes
+      // ...
+      // The first byte occupies the character representation
+      // The second byte occupies the color representation
+      unsafe {
+        framebuffer.offset(self.position).write_volatile(character);
+        framebuffer.offset(self.position + 1).write_volatile(color);
+      }
+      // Also, we need to update the position
+      self.position += 2;
+    }
+
+  }
+}
+
+impl fmt::Write for Cursor {
+  fn write_str(&mut self, s: &str) -> fmt::Result {
+    self.print(s.as_bytes());
+    Ok(())
+  }
+}
+
 
 #[panic_handler]              // Flag for panic handling
 #[no_mangle]                  // Prevents symbol naming 
-pub fn panic(_info: &PanicInfo) -> ! {
-  unsafe { 
-    intrinsics::abort(); 
+pub fn panic(info: &PanicInfo) -> ! {
+  
+  // Commenting this (For now)
+  // unsafe { 
+  //   intrinsics::abort(); 
+  // }
+
+  let mut cursor = Cursor {
+    position: 0,
+    foreground: Color::White,
+    background: Color::Red,
+  };
+
+  for _ in 0..(80 * 25) {
+    cursor.print(b" ");
   }
+  cursor.position = 0;
+  write!(cursor, "{}", info).unwrap();
+
+  loop {}
 }
 
 /// This supposedly handles exception handling. Thus, the "eh"
@@ -40,16 +99,20 @@ pub extern "C" fn eh_personality() { }
 
 #[no_mangle]
 pub extern "C" fn _start() -> ! {
-  let framebuffer = 0xb8000 as *mut u8;
+  let text = b"I love Machi, Andy, Guts, and Babsh!";
 
-  unsafe {
-    framebuffer
-      .offset(1) 
-      .write_volatile(0x30);
-  }
+  let mut cursor = Cursor {
+    position: 0,
+    foreground: Color::BrightCyan,
+    background: Color::Black,
+  };
+  cursor.print(text);
 
   loop {
     hlt();  // Certainly this is an x86_64 instruction
   }
+
+  // If you want to force a panic, uncomment this.
+  // panic!("help!");
 }
 
