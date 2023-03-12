@@ -6,7 +6,6 @@ use svg::Document;
 use std::thread;
 use crossbeam::channel::unbounded;
 
-
 use crate::Operation::{
     Forward,
     Home,

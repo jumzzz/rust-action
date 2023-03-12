@@ -46,3 +46,6 @@ Actually, the detail is on page 316-317 on Rust-in-Action book
 - Iterators
 - Mappings
 - Also, it should work well with Rayon
+
+
+7. Go to OS Dev Wiki and Extend the Functionalities of Fledge OS 
