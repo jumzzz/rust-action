@@ -10,7 +10,7 @@ bootloader = "0.9"
 x86_64 = "0.14"
 
 [package.metadata.bootimage]
-build-command = ["build"]
+build-command = ["build", "verbose"]
 
 run-command = [
     "qemu-system-x86_64", "-drive", "format=raw,file={}"

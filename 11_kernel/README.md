@@ -39,3 +39,7 @@ build-std-features = ["compiler-builtins-mem"]
 runner = "bootimage runner"
 ```
 
+## Things We Want to Understand
+
+1. The extra `.cargo/config.toml` configuration file
+2. The code part in `main.rs`
