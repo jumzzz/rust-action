@@ -15,5 +15,4 @@ fn main() {
     }
 
     println!("Can't reach me!");
-
 }
