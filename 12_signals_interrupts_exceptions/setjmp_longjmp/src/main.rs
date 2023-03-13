@@ -15,6 +15,27 @@ static mut SHUT_DOWN: bool = false;
 static mut RETURN_HERE: jmp_buf = [0; JMP_BUF_WIDTH];
 const MOCK_SIGNAL_AT: usize = 3;
 
+extern "C" {
+    #[link_name = "llvm.eh.sjlj.setjmp"]
+    pub fn setjmp(_: *mut i8) -> i32;
+
+    #[link_name = "llvm.eh.sjlj.longjmp"]
+    pub fn longjmp(_: *mut i8);
+}
+
+#[inline]
+fn ptr_to_jmp_buf() -> *mut i8 {
+    // Puts Rust compiler at ease to ensure that the source won't be directly
+    // mutable before it reaches llvm
+    unsafe { &RETURN_HERE as *const i8 as *mut i8 }
+}
+
+#[inline]
+fn return_early() {
+    let franken_pointer = ptr_to_jmp_buf();
+    unsafe { longjmp(franken_pointer) }
+}
+
 
 
 
